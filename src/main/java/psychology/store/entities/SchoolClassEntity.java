@@ -23,6 +23,17 @@ public class SchoolClassEntity {
 	@NonNull
 	@ManyToOne
 	private SchoolEntity school;
+	
+	public SchoolClassEntity() {
+		super();
+	}
+	
+	public SchoolClassEntity(Integer number, String letter, SchoolEntity school) {
+		super();
+		this.number = number;
+		this.letter = letter;
+		this.school = school;
+	}
 	public Long getId() {
 		return id;
 	}
