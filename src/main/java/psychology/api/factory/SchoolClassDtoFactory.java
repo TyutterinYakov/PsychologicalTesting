@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import psychology.api.dto.SchoolClassDto;
-import psychology.store.entities.SchoolClassEntity;
+import psychology.store.entity.SchoolClassEntity;
 
 @Component
 public class SchoolClassDtoFactory {

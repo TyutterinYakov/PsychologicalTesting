@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import psychology.api.dto.SchoolDto;
-import psychology.store.entities.SchoolEntity;
+import psychology.store.entity.SchoolEntity;
 
 @Component
 public class SchoolDtoFactory {
