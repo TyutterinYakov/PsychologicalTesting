@@ -2,6 +2,7 @@ package psychology.api.service.impl;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,11 +45,10 @@ public class SchoolServiceImpl implements SchoolService {
 	}
 
 	@Override
-	public List<SchoolDto> getSchoolsByFilter(String filter) {
-		boolean isFiltered = !filter.isBlank();
+	public List<SchoolDto> getSchoolsByFilter(Optional<String> filter) {
 		List<SchoolEntity> schools = new LinkedList<>();
-		if(isFiltered) {
-			schools = schoolDao.findAllByFilter(filter);
+		if(filter.isPresent()) {
+			schools = schoolDao.findAllByFilter(filter.get());
 		} else {
 			schools = schoolDao.findAll();
 		}

@@ -1,6 +1,8 @@
 package psychology.api.service.impl;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -65,6 +67,32 @@ public class TestServiceImpl implements TestService {
 						"Ой, что-то пошло не так, тест с идентификатором \"%s\" не найден",
 						testId)));
 	}
+
+	@Override
+	public List<TestDto> findAllTestByNameAndPsychologist(Optional<String> filter, Optional<Long> psychologistId) {
+		List <TestEntity> tests = new ArrayList<>();
+		if(psychologistId.isPresent()) {
+			PsychologistEntity psychologist =  psychologistService.findPsychologistById(psychologistId.get());
+			if(filter.isPresent()) {
+				tests = testDao.findTestByFilterAndPsychologist(filter.get(), psychologist);
+			} else {
+				tests = testDao.findByPsychologist(psychologist);
+			}
+		} else if(filter.isPresent()) {
+			tests = testDao.findByFilter(filter.get());
+		} else {
+			tests = testDao.findAll();
+		}
+		return testDtoFactory.createListTestDto(tests);
+		
+	}
+
+	@Override
+	public void deleteTestById(Long testId) {
+		findTestById(testId);
+		testDao.deleteById(testId);
+	}
+
 	
 	
 	

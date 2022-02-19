@@ -1,6 +1,7 @@
 package psychology.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,9 +27,9 @@ public class SchoolController {
 		super();
 		this.schoolService = schoolService;
 	}
-	private static final String CREATE_SCHOOL= "/api/school/{school_name}";
-	private static final String FETCH_SCHOOLS = "/api/school";
-	private static final String DELETE_SCHOOL = "/api/school/{school_id}";
+	public static final String CREATE_SCHOOL= "/api/school/{school_name}";
+	public static final String FETCH_SCHOOLS = "/api/schools";
+	public static final String DELETE_SCHOOL = "/api/school/{school_id}";
 	
 	@PostMapping(CREATE_SCHOOL)
 	public ResponseEntity<?> createSchool(@PathVariable("school_name") String schoolName){
@@ -39,7 +40,7 @@ public class SchoolController {
 
 	@GetMapping(FETCH_SCHOOLS)
 	public ResponseEntity<List<SchoolDto>> fetchSchools(
-			@RequestParam String filter) {
+			@RequestParam(name="filter", required = false) Optional<String> filter) {
 		
 		return ResponseEntity.ok(schoolService.getSchoolsByFilter(filter));
 		
