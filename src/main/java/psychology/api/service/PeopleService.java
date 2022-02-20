@@ -14,4 +14,6 @@ public interface PeopleService {
 
 	List<PeopleDto> getAllPeopleByFilter(String filter);
 
+	Long getPeopleIdByLoginAndPassword(String login, String password);
+
 }

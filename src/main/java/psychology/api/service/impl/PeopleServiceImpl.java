@@ -101,6 +101,17 @@ public class PeopleServiceImpl implements PeopleService {
 		}
 		return peopleDtoFactory.createListPeopleDto(peopleDao.findAllByFilter(filter));
 	}
+
+	@Override
+	public Long getPeopleIdByLoginAndPassword(String login, String password) {
+		PeopleEntity people = peopleDao.findByLoginAndPassword(login, password)
+				.orElseThrow(()->
+					new NotFoundException(
+						"Пользователь с такими данными не найден"
+					)
+				);
+		return people.getId();
+	}
 	
 	
 	

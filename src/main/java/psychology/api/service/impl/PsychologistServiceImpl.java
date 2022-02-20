@@ -3,7 +3,6 @@ package psychology.api.service.impl;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,6 @@ import psychology.api.factory.PeopleDtoFactory;
 import psychology.api.factory.PsychologistDtoFactory;
 import psychology.api.factory.TestPeopleDtoFactory;
 import psychology.api.service.PsychologistService;
-import psychology.api.service.TestService;
 import psychology.store.entity.PsychologistEntity;
 import psychology.store.entity.TestEntity;
 import psychology.store.repository.PsychologistRepository;
@@ -27,27 +25,26 @@ import psychology.store.repository.TestRepository;
 public class PsychologistServiceImpl implements PsychologistService {
 
 	
-	private final TestService testService;
 	private final PsychologistRepository psychologistDao;
 	private final TestPeopleRepository testPeopleDao;
 	private final TestPeopleDtoFactory testPeopleDtoFactory;
 	private final PsychologistDtoFactory psychologistDtoFactory;
 	private final SchoolClassServiceImpl classService;
 	private final PeopleDtoFactory peopleDtoFactory;
+	private final TestRepository testDao;
 
 	@Autowired
-	public PsychologistServiceImpl(TestService testService, PsychologistRepository psychologistDao,
-			TestPeopleRepository testPeopleDao, TestPeopleDtoFactory testPeopleDtoFactory,
-			PsychologistDtoFactory psychologistDtoFactory, SchoolClassServiceImpl classService,
-			PeopleDtoFactory peopleDtoFactory) {
+	public PsychologistServiceImpl(PsychologistRepository psychologistDao, TestPeopleRepository testPeopleDao,
+			TestPeopleDtoFactory testPeopleDtoFactory, PsychologistDtoFactory psychologistDtoFactory,
+			SchoolClassServiceImpl classService, PeopleDtoFactory peopleDtoFactory, TestRepository testDao) {
 		super();
-		this.testService = testService;
 		this.psychologistDao = psychologistDao;
 		this.testPeopleDao = testPeopleDao;
 		this.testPeopleDtoFactory = testPeopleDtoFactory;
 		this.psychologistDtoFactory = psychologistDtoFactory;
 		this.classService = classService;
 		this.peopleDtoFactory = peopleDtoFactory;
+		this.testDao = testDao;
 	}
 
 	@Override
@@ -61,11 +58,9 @@ public class PsychologistServiceImpl implements PsychologistService {
 
 	@Override
 	public List<TestPeopleDto> getTestResults(Long testId, Long psychologistId) {
-		PsychologistEntity psychologist =  findPsychologistById(psychologistId);
-		TestEntity test = testService.findTestById(testId);
-		
+		findPsychologistById(psychologistId);
 		return testPeopleDtoFactory.createListTestPeopleDto(
-				testPeopleDao.findAllByTestAndPsychologist(test, psychologist));
+				testPeopleDao.findAllByTest(findTestById(testId)));
 	}
 
 	@Override
@@ -93,6 +88,13 @@ public class PsychologistServiceImpl implements PsychologistService {
 					classService
 					.getSchoolClassById(classId)
 					.getPeoples());
+	}
+	
+	
+	private TestEntity findTestById(Long testId) {
+		return testDao.findById(testId).orElseThrow(()->
+			new NotFoundException(String.format("Тест с идентификатором \"%s\" не найден", testId))
+		);
 	}
 	
 	

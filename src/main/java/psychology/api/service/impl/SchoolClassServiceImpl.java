@@ -1,6 +1,5 @@
 package psychology.api.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,8 +61,8 @@ public class SchoolClassServiceImpl implements SchoolClassService{
 
 	@Override
 	public void deleteSchoolClass(Long schoolId, Long classId) {
-		findSchoolClassByIdAndSchool(classId, schoolService.searchSchoolById(schoolId));
-		classDao.deleteById(classId);
+		SchoolClassEntity classEntity = findSchoolClassByIdAndSchool(classId, schoolService.searchSchoolById(schoolId));
+		classDao.deleteById(classEntity.getId());
 	}
 	
 	@Override

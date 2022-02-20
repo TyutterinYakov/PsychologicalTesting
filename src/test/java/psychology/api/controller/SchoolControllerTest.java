@@ -26,26 +26,26 @@ public class SchoolControllerTest {
 	
 	@Autowired
 	private MockMvc mvc;
-	
-	
-	@Test
-	public void addSchoolTest() throws Exception {
-//		String schoolName = "Школа №1 Город Сясьтрой";
-//		MvcResult result = mvc.perform(MockMvcRequestBuilders.post(SchoolController
-//				.CREATE_SCHOOL.replace("{school_name}", schoolName))
-//		).andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
+//	
+//	
+//	@Test
+//	public void addSchoolTest() throws Exception {
+////		String schoolName = "Школа №1 Город Сясьтрой";
+////		MvcResult result = mvc.perform(MockMvcRequestBuilders.post(SchoolController
+////				.CREATE_SCHOOL.replace("{school_name}", schoolName))
+////		).andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
+////		
+////		logger.info(result.getResponse().toString());
+//	}
+//	
+//	@Test
+//	public void deleteSchoolTest() throws Exception {
+////		Long schoolId = 7L;
+////		MvcResult result = mvc.perform(MockMvcRequestBuilders.delete(SchoolController
+////				.DELETE_SCHOOL.replace("{school_id}", schoolId.toString()))
+////		).andExpect(MockMvcResultMatchers.status().isNoContent()).andReturn();
+////		
+////		logger.info(result.getResponse().toString());
 //		
-//		logger.info(result.getResponse().toString());
-	}
-	
-	@Test
-	public void deleteSchoolTest() throws Exception {
-//		Long schoolId = 7L;
-//		MvcResult result = mvc.perform(MockMvcRequestBuilders.delete(SchoolController
-//				.DELETE_SCHOOL.replace("{school_id}", schoolId.toString()))
-//		).andExpect(MockMvcResultMatchers.status().isNoContent()).andReturn();
-//		
-//		logger.info(result.getResponse().toString());
-		
-	}
+//	}
 }

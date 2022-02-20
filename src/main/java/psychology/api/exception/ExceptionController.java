@@ -20,5 +20,9 @@ public class ExceptionController {
 		
 		return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
 	}
+	@ExceptionHandler
+	public ResponseEntity<?> notPermissionException(NotPermissionException ex){
+		return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+	}
 	
 }
