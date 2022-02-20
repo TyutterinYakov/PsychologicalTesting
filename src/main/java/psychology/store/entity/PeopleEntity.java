@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -31,6 +32,10 @@ public class PeopleEntity {
 	@NonNull
 	private LocalDate dateOfBirth;
 	@NonNull
+	private String login;
+	@NonNull
+	private String password;
+	@NonNull
 	@Enumerated(EnumType.STRING)
 	private PeopleRole role;
 	@NonNull
@@ -43,16 +48,21 @@ public class PeopleEntity {
 	public PeopleEntity() {
 		super();
 	}
-	public PeopleEntity(String fio, LocalDate dateOfBirth, PeopleRole role, SchoolClassEntity schoolClass) {
-		super();
-		this.fio = fio;
-		this.dateOfBirth = dateOfBirth;
-		this.role = role;
-		this.schoolClass = schoolClass;
-	}
+
 	public Long getId() {
 		return id;
 	}
+	public PeopleEntity(String fio, LocalDate dateOfBirth, String login, String password, PeopleRole role,
+			SchoolClassEntity schoolClass) {
+		super();
+		this.fio = fio;
+		this.dateOfBirth = dateOfBirth;
+		this.login = login;
+		this.password = password;
+		this.role = role;
+		this.schoolClass = schoolClass;
+	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -86,6 +96,19 @@ public class PeopleEntity {
 	public void setTestsPeoples(List<TestPeopleEntity> testsPeoples) {
 		this.testsPeoples = testsPeoples;
 	}
+	public String getLogin() {
+		return login;
+	}
+	public void setLogin(String login) {
+		this.login = login;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
 	
 	
 	

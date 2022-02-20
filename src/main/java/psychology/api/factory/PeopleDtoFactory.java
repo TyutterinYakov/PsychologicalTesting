@@ -18,7 +18,9 @@ public class PeopleDtoFactory {
 				people.getFio(), 
 				people.getDateOfBirth(), 
 				people.getRole(), 
-				people.getSchoolClass().getId()
+				people.getSchoolClass().getId(),
+				people.getLogin(),
+				people.getPassword()
 				);
 	}
 	

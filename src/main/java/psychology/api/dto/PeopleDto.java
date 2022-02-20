@@ -20,14 +20,25 @@ public class PeopleDto {
 	private PeopleRole role;
 	@NonNull
 	private Long schoolClassId;
+	@NonNull
+	private String login;
+	@NonNull
+	private String password;
 
-	public PeopleDto(Long id, String fio, LocalDate dateOfBirth, PeopleRole role, Long schoolClassId) {
+	
+	
+	
+	
+	public PeopleDto(Long id, String fio, LocalDate dateOfBirth, PeopleRole role, Long schoolClassId, String login,
+			String password) {
 		super();
 		this.id = id;
 		this.fio = fio;
 		this.dateOfBirth = dateOfBirth;
 		this.role = role;
 		this.schoolClassId = schoolClassId;
+		this.login = login;
+		this.password = password;
 	}
 
 	public Long getId() {
@@ -68,6 +79,22 @@ public class PeopleDto {
 
 	public void setSchoolClassId(Long schoolClassId) {
 		this.schoolClassId = schoolClassId;
+	}
+
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 
