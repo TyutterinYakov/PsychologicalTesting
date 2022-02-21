@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,13 +23,18 @@ public class PsychologistEntity {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	@NonNull
+	@Column(length=300)
 	private String fio;
 	@NonNull
+	@Column(length=60)
 	private String login;
 	@NonNull
+	@Column(length=60)
 	private String password;
 	@OneToMany(cascade=CascadeType.REMOVE, fetch=FetchType.LAZY, mappedBy="psychologist")
 	private List<TestEntity> tests = new ArrayList<>();
+	@OneToMany(cascade=CascadeType.REMOVE, fetch=FetchType.LAZY, mappedBy="psychologist")
+	private List<SchoolClassEntity> schoolClasses = new ArrayList<>();
 	
 	public Long getId() {
 		return id;
@@ -60,6 +66,13 @@ public class PsychologistEntity {
 	public void setTests(List<TestEntity> tests) {
 		this.tests = tests;
 	}
+	public List<SchoolClassEntity> getSchoolClasses() {
+		return schoolClasses;
+	}
+	public void setSchoolClasses(List<SchoolClassEntity> schoolClasses) {
+		this.schoolClasses = schoolClasses;
+	}
+	
 	
 	
 	

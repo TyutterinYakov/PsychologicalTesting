@@ -14,29 +14,24 @@ import javax.persistence.Table;
 
 import org.springframework.lang.NonNull;
 
-
 @Entity
-@Table(name="test_people")
-public class TestPeopleEntity {
+@Table(name="test_answer")
+public class TestAnswerEntity {
+
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	
 	@NonNull
 	@ManyToOne(cascade=CascadeType.REFRESH, fetch=FetchType.EAGER)
 	private PeopleEntity people;
 	@NonNull
 	@ManyToOne(cascade=CascadeType.REFRESH, fetch=FetchType.EAGER)
 	private TestEntity test;
-	@NonNull
 	@Column(length=20000)
+	@NonNull
 	private String answers;
-	@NonNull
-	@Column(length=1000)
-	private String text;
-	@NonNull
-	private LocalDateTime createAt = LocalDateTime.now();
+	private LocalDateTime createdAt = LocalDateTime.now();
 	public Long getId() {
 		return id;
 	}
@@ -61,17 +56,11 @@ public class TestPeopleEntity {
 	public void setAnswers(String answers) {
 		this.answers = answers;
 	}
-	public LocalDateTime getCreateAt() {
-		return createAt;
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
 	}
-	public void setCreateAt(LocalDateTime createAt) {
-		this.createAt = createAt;
-	}
-	public String getText() {
-		return text;
-	}
-	public void setText(String text) {
-		this.text = text;
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 	
 	

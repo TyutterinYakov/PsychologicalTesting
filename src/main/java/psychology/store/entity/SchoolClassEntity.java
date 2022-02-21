@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -25,22 +26,26 @@ public class SchoolClassEntity {
 	@NonNull
 	private Integer number;
 	@NonNull
+	@Column(length=5)
 	private String letter;
 	@NonNull
 	@ManyToOne(cascade=CascadeType.REFRESH, fetch=FetchType.EAGER)
 	private SchoolEntity school;
 	@OneToMany(cascade=CascadeType.REMOVE, fetch=FetchType.LAZY, mappedBy="schoolClass")
 	private List<PeopleEntity> peoples = new ArrayList<>();
+	@ManyToOne(cascade=CascadeType.REFRESH, fetch=FetchType.EAGER)
+	private PsychologistEntity psychologist;
 	
 	public SchoolClassEntity() {
 		super();
 	}
 	
-	public SchoolClassEntity(Integer number, String letter, SchoolEntity school) {
+	public SchoolClassEntity(Integer number, String letter, SchoolEntity school, PsychologistEntity psychologist) {
 		super();
 		this.number = number;
 		this.letter = letter;
 		this.school = school;
+		this.psychologist = psychologist;
 	}
 	public Long getId() {
 		return id;
@@ -74,6 +79,16 @@ public class SchoolClassEntity {
 	public void setPeoples(List<PeopleEntity> peoples) {
 		this.peoples = peoples;
 	}
+
+	public PsychologistEntity getPsychologist() {
+		return psychologist;
+	}
+
+	public void setPsychologist(PsychologistEntity psychologist) {
+		this.psychologist = psychologist;
+	}
+	
+	
 	
 	
 	

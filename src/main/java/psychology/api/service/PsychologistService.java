@@ -13,10 +13,10 @@ public interface PsychologistService {
 
 	PsychologistEntity findPsychologistById(Long psychologistId);
 
-	List<TestPeopleDto> getTestResults(Long testId, Long psychologistId);
+	List<TestPeopleDto> getTestResults(Long testId, PsychologistEntity psychologist);
 
 	List<PsychologistDto> getPsychologistById(Optional<Long> psychologistId);
 
-	List<PeopleDto> getPeoplesByClass(Long classId, Long psychologistId);
+	List<PeopleDto> getPeoplesByClass(Long classId, PsychologistEntity psychologist);
 
 }

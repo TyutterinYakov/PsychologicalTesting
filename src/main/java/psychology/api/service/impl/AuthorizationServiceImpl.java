@@ -56,22 +56,22 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 	
 	
 	
-	public boolean checkToken(HttpServletRequest request) {
+	public PsychologistEntity checkTokenReturnPsychologist(HttpServletRequest request) {
 		String token = request.getHeader("Authorization");
-		if(token.isBlank()) {
+		if(token==null||token.isBlank()) {
 			throw new NotPermissionException("Токен не найден. Пройдите авторизацию повторно");
 		}
 		TokenEntity tokenEntity = tokenDao.findById(token)
 				.orElseThrow(()->new NotPermissionException("Токена не существует"));
 		if(tokenEntity.getExpiredAt().compareTo(LocalDateTime.now())!=-1) {
-			 return true;
+			 return tokenEntity.getPsychologist();
 		} else {
 			tokenDao.deleteById(token);
 			throw new NotPermissionException("Время токена истекло");
 		}
-		
-		 
 	} 
+	
+	
 	
 	
 	

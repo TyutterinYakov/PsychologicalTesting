@@ -7,8 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +25,8 @@ public class PsychologistController {
 	private final AuthorizationService authorizationService;
 
 	@Autowired
-	public PsychologistController(PsychologistService psychologistService, AuthorizationService authorizationService) {
+	public PsychologistController(PsychologistService psychologistService, 
+			AuthorizationService authorizationService) {
 		super();
 		this.psychologistService = psychologistService;
 		this.authorizationService = authorizationService;
@@ -39,11 +38,10 @@ public class PsychologistController {
 	
 	@GetMapping(GET_TEST_RESULTS)
 	public ResponseEntity<List<TestPeopleDto>> fetchPsychologist(
-			@PathVariable("psychologist_id") Long psychologistId,
 			@PathVariable("test_id") Long testId,
 			HttpServletRequest request){
-		authorizationService.checkToken(request);
-		return ResponseEntity.ok(psychologistService.getTestResults(testId, psychologistId));
+		return ResponseEntity.ok(psychologistService.getTestResults(testId,
+				authorizationService.checkTokenReturnPsychologist(request)));
 	}
 	
 	@PostMapping(GET_PSYCHOLOGISTS)
@@ -54,10 +52,9 @@ public class PsychologistController {
 	@GetMapping(GET_PEOPLES_BY_CLASS)
 	public ResponseEntity<?> getPeoplesByClass(
 			@PathVariable("class_id") Long classId,
-			@PathVariable("psychologist_id") Long psychologistId,
 			HttpServletRequest request){
-		authorizationService.checkToken(request);
-		return  ResponseEntity.ok(psychologistService.getPeoplesByClass(classId, psychologistId));
+		return  ResponseEntity.ok(psychologistService.getPeoplesByClass(classId, 
+				authorizationService.checkTokenReturnPsychologist(request)));
 	}
 	
 	

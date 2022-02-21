@@ -9,9 +9,12 @@ import org.springframework.stereotype.Service;
 import psychology.api.dto.SchoolClassDto;
 import psychology.api.exception.BadRequestException;
 import psychology.api.exception.NotFoundException;
+import psychology.api.exception.NotPermissionException;
 import psychology.api.factory.SchoolClassDtoFactory;
 import psychology.api.service.SchoolClassService;
 import psychology.api.service.SchoolService;
+import psychology.store.entity.PeopleEntity;
+import psychology.store.entity.PsychologistEntity;
 import psychology.store.entity.SchoolClassEntity;
 import psychology.store.entity.SchoolEntity;
 import psychology.store.repository.SchoolClassRepository;
@@ -33,15 +36,16 @@ public class SchoolClassServiceImpl implements SchoolClassService{
 	}
 
 	@Override
-	public SchoolClassDto createSchoolClass(Long schoolId, Integer classNumber, String classLetter) {
+	public SchoolClassDto createSchoolClass(Long schoolId, Integer classNumber, 
+			String classLetter, PsychologistEntity psychologist) {
 		SchoolEntity school = schoolService.searchSchoolById(schoolId);
 		classDao.findBySchoolAndNumberAndLetterContainsIgnoreCase(
 				school, classNumber, classLetter.trim().toUpperCase())
 		.ifPresent((schoolOpt)->{
 			throw new BadRequestException(
 					String.format(
-							"Класс \"%s\" уже есть в этой школе", 
-							classNumber+classLetter
+							"Класс \"%s%s\" уже есть в этой школе", 
+							classNumber, classLetter
 					)
 			);
 		});
@@ -53,16 +57,18 @@ public class SchoolClassServiceImpl implements SchoolClassService{
 										classLetter
 											.strip()
 											.toUpperCase(), 
-										school
+										school,
+										psychologist
 								)
 						)
 				);
 	}
 
 	@Override
-	public void deleteSchoolClass(Long schoolId, Long classId) {
-		SchoolClassEntity classEntity = findSchoolClassByIdAndSchool(classId, schoolService.searchSchoolById(schoolId));
-		classDao.deleteById(classEntity.getId());
+	public void deleteSchoolClass(Long schoolId, Long classId, PsychologistEntity psychologist) {
+		classDao.deleteById(findSchoolClassByIdAndSchool(classId,
+				schoolService.searchSchoolById(schoolId), 
+				psychologist).getId());
 	}
 	
 	@Override
@@ -98,8 +104,9 @@ public class SchoolClassServiceImpl implements SchoolClassService{
 	
 	
 	
-	private SchoolClassEntity findSchoolClassByIdAndSchool(Long classId, SchoolEntity school) {
-		return classDao.findByIdAndSchool(classId, school).orElseThrow(()->
+	private SchoolClassEntity findSchoolClassByIdAndSchool(Long classId, 
+			SchoolEntity school, PsychologistEntity psychologist) {
+		return classDao.findByIdAndSchoolAndPsychologist(classId, school, psychologist).orElseThrow(()->
 				new NotFoundException(String.format("Класс с идентификатором \"%s\" не найден", classId)));
 	}
 	
@@ -110,6 +117,23 @@ public class SchoolClassServiceImpl implements SchoolClassService{
 						"Класс с идентификатором \"%s\" не найден",
 						classId))
 		);
+	}
+
+	@Override
+	public SchoolClassEntity getSchoolClassByIdAndPsychologist(Long classId, PsychologistEntity psychologist) {
+		return classDao.findByIdAndPsychologist(classId, psychologist).orElseThrow(()->
+		new NotFoundException(String.format(
+				"Класс с идентификатором \"%s\" не найден или у вас нет доступа",
+				classId))
+);
+	}
+
+	public SchoolClassEntity getClassByIdAndPsychologist(Long classId,
+			PsychologistEntity psychologist) {
+		return classDao.findByIdAndPsychologist(classId, psychologist).orElseThrow(()->
+				new NotPermissionException(
+						"У вас нет прав для просмотра людей из этого класса"));
+		
 	}
 
 	

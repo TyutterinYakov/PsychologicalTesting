@@ -11,10 +11,12 @@ import psychology.api.dto.PeopleDto;
 import psychology.api.dto.PsychologistDto;
 import psychology.api.dto.TestPeopleDto;
 import psychology.api.exception.NotFoundException;
+import psychology.api.exception.NotPermissionException;
 import psychology.api.factory.PeopleDtoFactory;
 import psychology.api.factory.PsychologistDtoFactory;
 import psychology.api.factory.TestPeopleDtoFactory;
 import psychology.api.service.PsychologistService;
+import psychology.api.service.SchoolClassService;
 import psychology.store.entity.PsychologistEntity;
 import psychology.store.entity.TestEntity;
 import psychology.store.repository.PsychologistRepository;
@@ -29,14 +31,14 @@ public class PsychologistServiceImpl implements PsychologistService {
 	private final TestPeopleRepository testPeopleDao;
 	private final TestPeopleDtoFactory testPeopleDtoFactory;
 	private final PsychologistDtoFactory psychologistDtoFactory;
-	private final SchoolClassServiceImpl classService;
+	private final SchoolClassService classService;
 	private final PeopleDtoFactory peopleDtoFactory;
 	private final TestRepository testDao;
 
 	@Autowired
 	public PsychologistServiceImpl(PsychologistRepository psychologistDao, TestPeopleRepository testPeopleDao,
 			TestPeopleDtoFactory testPeopleDtoFactory, PsychologistDtoFactory psychologistDtoFactory,
-			SchoolClassServiceImpl classService, PeopleDtoFactory peopleDtoFactory, TestRepository testDao) {
+			SchoolClassService classService, PeopleDtoFactory peopleDtoFactory, TestRepository testDao) {
 		super();
 		this.psychologistDao = psychologistDao;
 		this.testPeopleDao = testPeopleDao;
@@ -57,10 +59,11 @@ public class PsychologistServiceImpl implements PsychologistService {
 	}
 
 	@Override
-	public List<TestPeopleDto> getTestResults(Long testId, Long psychologistId) {
-		findPsychologistById(psychologistId);
+	public List<TestPeopleDto> getTestResults(Long testId, PsychologistEntity psychologist) {
+		TestEntity test = testDao.findByIdAndPsychologist(testId, psychologist).orElseThrow(()->
+				new NotPermissionException("У вас нет прав для просмотра результатов теста"));
 		return testPeopleDtoFactory.createListTestPeopleDto(
-				testPeopleDao.findAllByTest(findTestById(testId)));
+				testPeopleDao.findAllByTest(test));
 	}
 
 	@Override
@@ -81,13 +84,14 @@ public class PsychologistServiceImpl implements PsychologistService {
 	}
 
 	@Override
-	public List<PeopleDto> getPeoplesByClass(Long classId, Long psychologistId) {
-		findPsychologistById(psychologistId);
+	public List<PeopleDto> getPeoplesByClass(Long classId, PsychologistEntity psychologist) {
 		return peopleDtoFactory
 				.createListPeopleDto(
-					classService
-					.getSchoolClassById(classId)
-					.getPeoples());
+						classService.getClassByIdAndPsychologist(
+							classId, 
+							psychologist)
+						.getPeoples()
+				);
 	}
 	
 	

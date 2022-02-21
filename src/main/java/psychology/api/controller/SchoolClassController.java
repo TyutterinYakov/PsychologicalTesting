@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import psychology.api.dto.AckDto;
 import psychology.api.dto.SchoolClassDto;
 import psychology.api.service.AuthorizationService;
 import psychology.api.service.SchoolClassService;
@@ -53,23 +52,22 @@ public class SchoolClassController {
 			@PathVariable("school_id") Long schoolId,
 			@PathVariable("class_number") Integer classNumber, 
 			@PathVariable("class_letter") String classLetter, HttpServletRequest request){
-		authorizationService.checkToken(request);
 		return new ResponseEntity<>(
 				classService.createSchoolClass(
 						schoolId, 
 						classNumber, 
-						classLetter),
+						classLetter,
+						authorizationService.checkTokenReturnPsychologist(request)),
 				HttpStatus.CREATED
 				);
 		
 	}
-	@DeleteMapping(value =DELETE_SCHOOL_CLASS)
+	@DeleteMapping(DELETE_SCHOOL_CLASS)
 	public ResponseEntity<?> deleteSchoolClass(
 			@PathVariable("school_id") Long schoolId, 
 			@PathVariable("class_id") Long classId,
 			HttpServletRequest request) {
-		authorizationService.checkToken(request);
-		classService.deleteSchoolClass(schoolId, classId);
+		classService.deleteSchoolClass(schoolId, classId, authorizationService.checkTokenReturnPsychologist(request));
 		return new ResponseEntity<>(String.format("Класс с идентификатором \"%s\" удален", classId), HttpStatus.NO_CONTENT);
 	}
 	

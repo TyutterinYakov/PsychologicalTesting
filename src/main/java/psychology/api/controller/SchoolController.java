@@ -44,8 +44,9 @@ private static final Logger logger = LoggerFactory.getLogger(SchoolController.cl
 	public static final String DELETE_SCHOOL = "/api/school/{school_id}";
 	
 	@PostMapping(CREATE_SCHOOL)
-	public ResponseEntity<?> createSchool(@PathVariable("school_name") String schoolName, HttpServletRequest request){
-		authorizationService.checkToken(request);
+	public ResponseEntity<?> createSchool(@PathVariable("school_name") String schoolName, 
+			HttpServletRequest request){
+		authorizationService.checkTokenReturnPsychologist(request);
 		return new ResponseEntity<>(
 				schoolService.createSchool(schoolName),
 				HttpStatus.CREATED);
@@ -60,11 +61,11 @@ private static final Logger logger = LoggerFactory.getLogger(SchoolController.cl
 	}
 	 
 	@DeleteMapping(DELETE_SCHOOL)
-	public ResponseEntity<AckDto> deleteSchool(@PathVariable("school_id") Long schoolId, 
+	public ResponseEntity<?> deleteSchool(@PathVariable("school_id") Long schoolId, 
 			HttpServletRequest request){
-		authorizationService.checkToken(request);
+		authorizationService.checkTokenReturnPsychologist(request);
 		schoolService.deleteSchool(schoolId);
-		return new ResponseEntity<>(new AckDto(true), HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>("Школа удалена", HttpStatus.NO_CONTENT);
 	}
 	
 }

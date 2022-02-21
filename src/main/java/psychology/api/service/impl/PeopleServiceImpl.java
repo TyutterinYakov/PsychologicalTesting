@@ -3,6 +3,7 @@ package psychology.api.service.impl;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,10 +16,12 @@ import psychology.api.domain.PeopleRole;
 import psychology.api.dto.PeopleDto;
 import psychology.api.exception.BadRequestException;
 import psychology.api.exception.NotFoundException;
+import psychology.api.exception.NotPermissionException;
 import psychology.api.factory.PeopleDtoFactory;
 import psychology.api.service.PeopleService;
 import psychology.api.service.SchoolClassService;
 import psychology.store.entity.PeopleEntity;
+import psychology.store.entity.PsychologistEntity;
 import psychology.store.entity.SchoolClassEntity;
 import psychology.store.repository.PeopleRepository;
 
@@ -44,19 +47,27 @@ public class PeopleServiceImpl implements PeopleService {
 	}
 
 	@Override
-	public void deletePeopleById(Long peopleId) {
-		peopleDao.findById(peopleId).orElseThrow(()->
+	public void deletePeopleById(Long peopleId, PsychologistEntity psychologist) {
+		PeopleEntity people = peopleDao.findById(peopleId).orElseThrow(()->
 				new NotFoundException(
 						String.format(
 								"Человек с идентификатором \"%s\" не найден",
 								peopleId)
 				)
 		);
+		SchoolClassEntity schoolClass =  people.getSchoolClass();
+		if(psychologist.getSchoolClasses().stream().filter((c)->
+			c.getId().equals(schoolClass.getId())).count()>0) {
+			peopleDao.deleteById(people.getId());
+		}
+		
+		throw new NotPermissionException("Вы не относитесь этому классу");
+		
 	}
 
 	@Override
-	public PeopleDto createPeople(String peopleFio, LocalDate dateOfBirth, PeopleRole role, Long classId) {
-		SchoolClassEntity classEntity = classService.getSchoolClassById(classId);
+	public PeopleDto createPeople(String peopleFio, LocalDate dateOfBirth, PeopleRole role, Long classId, PsychologistEntity psychologist) {
+		SchoolClassEntity classEntity = classService.getSchoolClassByIdAndPsychologist(classId, psychologist);
 		
 		String login;
 		String password;

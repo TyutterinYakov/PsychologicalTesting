@@ -1,6 +1,7 @@
 package psychology.store.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,5 +21,7 @@ public interface TestRepository extends JpaRepository<TestEntity, Long> {
 
 	@Query("select t from TestEntity t where lower(t.name) like lower(concat('%', :filter, '%')) order by t.name")
 	List<TestEntity> findByFilter(String string);
+
+	Optional<TestEntity> findByIdAndPsychologist(Long testId, PsychologistEntity psychologist);
 
 }

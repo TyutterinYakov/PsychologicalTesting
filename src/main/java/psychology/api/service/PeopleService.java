@@ -5,12 +5,13 @@ import java.util.List;
 
 import psychology.api.domain.PeopleRole;
 import psychology.api.dto.PeopleDto;
+import psychology.store.entity.PsychologistEntity;
 
 public interface PeopleService {
 
-	void deletePeopleById(Long peopleId);
+	void deletePeopleById(Long peopleId, PsychologistEntity psychologistEntity);
 
-	PeopleDto createPeople(String peopleFio, LocalDate dateOfBirth, PeopleRole role, Long classId);
+	PeopleDto createPeople(String peopleFio, LocalDate dateOfBirth, PeopleRole role, Long classId, PsychologistEntity psychologistEntity);
 
 	List<PeopleDto> getAllPeopleByFilter(String filter);
 

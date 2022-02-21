@@ -40,20 +40,20 @@ public class TestServiceImpl implements TestService {
 	@Transactional
 	public TestDto createOrUpdateTest(Optional<Long> testId, Long psychologistId,
 			Optional<String> name, Optional<Boolean> isActived) {
+		PsychologistEntity psychologist = psychologistService.findPsychologistById(psychologistId);
 		if(!testId.isPresent()) {
 			name.ifPresentOrElse(null, ()->{
 				throw new BadRequestException("Имя теста не может быть пустым");});
 			return testDtoFactory.createTestDto(
 					testDao.saveAndFlush(
 						new TestEntity(
-							name.get(), 
-							psychologistService.
-							findPsychologistById(psychologistId)
+							name.get(),
+							psychologist
 							)
 						)
 					);
 		} else {
-			TestEntity test = findTestById(testId.get());
+			TestEntity test = findTestByIdAndPsychologist(testId.get(), psychologist);
 			name.ifPresent(test::setName);
 			isActived.ifPresent(test::setStarted);
 			return testDtoFactory.createTestDto(test);
@@ -61,10 +61,11 @@ public class TestServiceImpl implements TestService {
 	}
 
 	@Override
-	public TestEntity findTestById(Long testId) {
-		return testDao.findById(testId).orElseThrow(()->
+	public TestEntity findTestByIdAndPsychologist(Long testId, PsychologistEntity psychologist) {
+		return testDao.findByIdAndPsychologist(testId, psychologist).orElseThrow(()->
 				new NotFoundException(String.format(
-						"Ой, что-то пошло не так, тест с идентификатором \"%s\" не найден",
+						"Ой, что-то пошло не так, тест с идентификатором \"%s\" "
+						+ "не найден или он не принадлежит вам",
 						testId)));
 	}
 
@@ -88,9 +89,11 @@ public class TestServiceImpl implements TestService {
 	}
 
 	@Override
-	public void deleteTestById(Long testId) {
-		findTestById(testId);
-		testDao.deleteById(testId);
+	public void deleteTestById(Long testId, PsychologistEntity psychologist) {
+		testDao.deleteById(
+				findTestByIdAndPsychologist(
+						testId, psychologist).getId()
+				);
 	}
 
 	

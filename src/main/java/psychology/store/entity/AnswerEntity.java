@@ -1,6 +1,7 @@
 package psychology.store.entity;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -21,7 +22,8 @@ public class AnswerEntity {
 	@NonNull
 	private Integer answerOrder;
 	@NonNull
-	private String name;
+	@Column(length = 50)
+	private String text;
 	@NonNull
 	@ManyToOne(cascade=CascadeType.REFRESH, fetch=FetchType.EAGER)
 	private QuestionEntity question;
@@ -38,18 +40,19 @@ public class AnswerEntity {
 	public void setAnswerOrder(Integer answerOrder) {
 		this.answerOrder = answerOrder;
 	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
 	public QuestionEntity getQuestion() {
 		return question;
 	}
 	public void setQuestion(QuestionEntity question) {
 		this.question = question;
 	}
+	public String getText() {
+		return text;
+	}
+	public void setText(String text) {
+		this.text = text;
+	}
+	
 	
 	
 	

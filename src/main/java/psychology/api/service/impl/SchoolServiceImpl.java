@@ -58,8 +58,8 @@ public class SchoolServiceImpl implements SchoolService {
 
 	@Override
 	public void deleteSchool(Long schoolId) {
-		searchSchoolById(schoolId);
-		schoolDao.deleteById(schoolId);
+		
+		schoolDao.deleteById(searchSchoolById(schoolId).getId());
 	}
 	
 	@Override

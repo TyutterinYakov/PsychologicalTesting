@@ -48,18 +48,17 @@ public class TestController {
 	@PostMapping(CREATE_OR_UPDATE_TEST)
 	public ResponseEntity<?> createOrUpdateTest(
 			@RequestParam(required=false, name="test_id") Optional<Long> testId,
-			@RequestParam(name="psychologist_id") Long psychologistid,
 			@RequestParam(name="name", required = false) Optional<String> name,
 			@RequestParam(name="isActived", required = false) Optional<Boolean> isActived,
 			HttpServletRequest request){
-		authorizationService.checkToken(request);
-		return ResponseEntity.ok(testService.createOrUpdateTest(testId, psychologistid, name, isActived));
+		return ResponseEntity.ok(testService.createOrUpdateTest(testId, 
+				authorizationService.checkTokenReturnPsychologist(request).getId(), name, isActived));
 	}
 	
 	@DeleteMapping(DELETE_TEST)
 	public ResponseEntity<?> deleteTest(@PathVariable("test_id") Long testId, HttpServletRequest request){
-		authorizationService.checkToken(request);
-		testService.deleteTestById(testId);
+		testService.deleteTestById(testId, 
+				authorizationService.checkTokenReturnPsychologist(request));
 		return new ResponseEntity<>(new AckDto(true), HttpStatus.NO_CONTENT);
 		
 	}

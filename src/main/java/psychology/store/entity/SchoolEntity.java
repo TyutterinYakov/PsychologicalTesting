@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -21,10 +22,12 @@ public class SchoolEntity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
+	@Column(length=150)
 	@NonNull
 	private String name;
 	@OneToMany(mappedBy="school", fetch=FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<SchoolClassEntity> schoolClasses = new LinkedList<>();
+	
 	
 	public SchoolEntity() {
 		super();
